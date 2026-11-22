@@ -1,0 +1,112 @@
+<div class="create-page">
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">COURSE MANAGEMENT</span>
+      <h1>Add New Course</h1>
+      <p>Create a new course and configure its enrollment details.</p>
+    </div>
+
+    <button type="button" class="btn-back" (click)="cancel()">
+      ? Back to Courses
+    </button>
+  </div>
+
+  <div class="form-card">
+    <div class="form-heading">
+      <h2>Course Information</h2>
+      <p>Enter the details of the new course.</p>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="alert error-alert">{{ errorMessage() }}</div>
+    }
+
+    @if (successMessage()) {
+      <div class="alert success-alert">{{ successMessage() }}</div>
+    }
+
+    <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="courseName">Course Name *</label>
+          <input
+            id="courseName"
+            type="text"
+            formControlName="courseName"
+            placeholder="Enter course name"
+          />
+
+          @if (courseForm.controls.courseName.touched && courseForm.controls.courseName.invalid) {
+            <small class="field-error">Course name is required and must be within 100 characters.</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="duration">Duration *</label>
+          <input
+            id="duration"
+            type="text"
+            formControlName="duration"
+            placeholder="Example: 6 Months"
+          />
+
+          @if (courseForm.controls.duration.touched && courseForm.controls.duration.invalid) {
+            <small class="field-error">Duration is required and must be within 50 characters.</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="fees">Course Fees (?) *</label>
+          <input
+            id="fees"
+            type="number"
+            formControlName="fees"
+            min="1"
+            placeholder="Enter course fees"
+          />
+
+          @if (courseForm.controls.fees.touched && courseForm.controls.fees.invalid) {
+            <small class="field-error">Fees must be greater than zero.</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="capacity">Student Capacity *</label>
+          <input
+            id="capacity"
+            type="number"
+            formControlName="capacity"
+            min="1"
+            placeholder="Enter maximum students"
+          />
+
+          @if (courseForm.controls.capacity.touched && courseForm.controls.capacity.invalid) {
+            <small class="field-error">Capacity must be at least 1.</small>
+          }
+        </div>
+
+        <div class="form-group status-group">
+          <label for="isActive">Course Status</label>
+          <label class="toggle-option">
+            <input id="isActive" type="checkbox" formControlName="isActive" />
+            <span>Active and available for enrollment</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="cancel()">
+          Cancel
+        </button>
+
+        <button type="submit" class="btn-submit" [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            Creating...
+          } @else {
+            Create Course
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

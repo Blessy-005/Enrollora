@@ -28,13 +28,19 @@ export const routes: Routes = [
           import('./features/admin/students/student-list/student-list').then((m) => m.StudentList),
       },
       {
+        path: 'courses/new',
+        loadComponent: () =>
+          import('./features/admin/courses/course-create/course-create').then(
+            (m) => m.CourseCreate,
+          ),
+      },
+      {
         path: 'courses',
         loadComponent: () =>
           import('./features/admin/courses/course-list/course-list').then(
             (m) => m.CourseListComponent,
           ),
       },
-
       {
         path: 'enrollments',
         loadComponent: () =>
