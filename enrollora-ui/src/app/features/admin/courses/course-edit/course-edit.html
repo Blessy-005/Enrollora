@@ -1,0 +1,158 @@
+<div class="create-page">
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">COURSE MANAGEMENT</span>
+      <h1>Edit Course</h1>
+      <p>Update course information and enrollment details.</p>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="form-card state-message">
+      <div class="loader"></div>
+      <p>Loading course details...</p>
+    </div>
+  }
+
+  @else if (errorMessage() && !courseForm.dirty) {
+    <div class="form-card">
+      <div class="alert alert-error">
+        {{ errorMessage() }}
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="cancel()">
+          Back to Courses
+        </button>
+      </div>
+    </div>
+  }
+
+  @else {
+    <div class="form-card">
+      @if (errorMessage()) {
+        <div class="alert alert-error">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div class="alert alert-success">
+          {{ successMessage() }}
+        </div>
+      }
+
+      <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+
+          <div class="form-group full-width">
+            <label for="courseName">Course Name</label>
+            <input
+              id="courseName"
+              type="text"
+              formControlName="courseName"
+              placeholder="Enter course name"
+            />
+
+            @if (
+              courseForm.controls.courseName.touched &&
+              courseForm.controls.courseName.hasError('required')
+            ) {
+              <small class="error-text">Course name is required.</small>
+            }
+
+            @if (courseForm.controls.courseName.hasError('maxlength')) {
+              <small class="error-text">Maximum 100 characters allowed.</small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="duration">Duration</label>
+            <input
+              id="duration"
+              type="text"
+              formControlName="duration"
+              placeholder="Example: 6 Months"
+            />
+
+            @if (
+              courseForm.controls.duration.touched &&
+              courseForm.controls.duration.hasError('required')
+            ) {
+              <small class="error-text">Duration is required.</small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="fees">Course Fees (INR)</label>
+            <input
+              id="fees"
+              type="number"
+              formControlName="fees"
+              min="1"
+              placeholder="Enter course fees"
+            />
+
+            @if (
+              courseForm.controls.fees.touched &&
+              courseForm.controls.fees.hasError('min')
+            ) {
+              <small class="error-text">Fees must be greater than zero.</small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="capacity">Course Capacity</label>
+            <input
+              id="capacity"
+              type="number"
+              formControlName="capacity"
+              min="1"
+              placeholder="Enter maximum students"
+            />
+
+            @if (
+              courseForm.controls.capacity.touched &&
+              courseForm.controls.capacity.hasError('min')
+            ) {
+              <small class="error-text">Capacity must be at least 1.</small>
+            }
+          </div>
+
+          <div class="form-group status-group">
+            <label>Course Status</label>
+
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="isActive" />
+              <span>Active Course</span>
+            </label>
+
+            <small class="field-hint">
+              Enable or disable this course.
+            </small>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn-cancel"
+            (click)="cancel()"
+            [disabled]="isSubmitting()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="btn-submit"
+            [disabled]="isSubmitting() || isLoading()"
+          >
+            {{ isSubmitting() ? 'Saving Changes...' : 'Update Course' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>
