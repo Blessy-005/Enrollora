@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+﻿import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -19,6 +19,10 @@ export class CourseListComponent implements OnInit {
 
   isLoading = signal(false);
   errorMessage = signal('');
+
+  actionMessage = signal('');
+  actionErrorMessage = signal('');
+  deactivatingCourseId = signal<number | null>(null);
 
   pageNumber = signal(1);
   pageSize = signal(10);
@@ -45,6 +49,43 @@ export class CourseListComponent implements OnInit {
         console.error('Error loading courses:', error);
         this.errorMessage.set('Unable to load courses.');
         this.isLoading.set(false);
+      },
+    });
+  }
+
+  deactivateCourse(course: CourseResponse): void {
+    if (!course.isActive || this.deactivatingCourseId() !== null) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Are you sure you want to deactivate "${course.courseName}"? Existing enrollments will be preserved.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.deactivatingCourseId.set(course.courseId);
+    this.actionMessage.set('');
+    this.actionErrorMessage.set('');
+
+    this.courseService.deactivateCourse(course.courseId).subscribe({
+      next: (response) => {
+        this.deactivatingCourseId.set(null);
+        this.actionMessage.set(
+          response.message || 'Course deactivated successfully.',
+        );
+
+        this.loadCourses();
+      },
+      error: (error) => {
+        console.error('Error deactivating course:', error);
+
+        this.deactivatingCourseId.set(null);
+        this.actionErrorMessage.set(
+          error.error?.message || 'Unable to deactivate course. Please try again.',
+        );
       },
     });
   }
