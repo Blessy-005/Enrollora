@@ -27,7 +27,7 @@
             <h5>Filter Students</h5>
             <p>Find students using search and filter criteria</p>
           </div>
-          <span class="filter-icon">☷</span>
+          <span class="filter-icon">☰</span>
         </div>
 
         <div class="row g-3">
@@ -58,11 +58,10 @@
             <label class="form-label">Department</label>
             <select class="form-select" [(ngModel)]="filters.department">
               <option value="">All Departments</option>
-              <option value="CSE">CSE</option>
-              <option value="ECE">ECE</option>
-              <option value="EEE">EEE</option>
-              <option value="IT">IT</option>
-              <option value="Mechanical">Mechanical</option>
+              <option value="Computer Science">CSE</option>
+              <option value="Electronics">ECE</option>
+              <option value="Information Technology">IT</option>
+              <option value="Mechanical Engineering">Mechanical</option>
             </select>
           </div>
 
@@ -413,46 +412,99 @@
           <p>Update student information</p>
         </div>
 
-        <button type="button" class="modal-close" (click)="closeEditModal()">&times;</button>
+        <button type="button" class="modal-close"
+          (click)="closeEditModal()" [disabled]="isUpdatingStudent">
+          &times;
+        </button>
       </div>
 
       <div class="student-modal-body">
-        <form [formGroup]="studentForm" (ngSubmit)="updateStudent()">
-          <div class="mb-3">
-            <label class="form-label">Student Name</label>
-            <input type="text" class="form-control" formControlName="name" />
-          </div>
+        @if (isEditLoading) {
+          <p class="text-center py-4">Loading student details...</p>
+        } @else {
+          @if (editErrorMessage) {
+            <div class="alert alert-danger">{{ editErrorMessage }}</div>
+          }
 
-          <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" formControlName="email" />
-          </div>
+          @if (editSuccessMessage) {
+            <div class="alert alert-success">{{ editSuccessMessage }}</div>
+          }
 
-          <div class="mb-3">
-            <label class="form-label">Department</label>
-            <input type="text" class="form-control" formControlName="department" />
-          </div>
+          <form [formGroup]="studentForm" (ngSubmit)="updateStudent()">
+            <div class="mb-3">
+              <label class="form-label">Student Name</label>
+              <input type="text" class="form-control" formControlName="name"
+                [class.is-invalid]="studentForm.controls.name.touched && studentForm.controls.name.invalid" />
 
-          <div class="row">
-            <div class="col-6 mb-3">
-              <label class="form-label">Age</label>
-              <input type="number" class="form-control" formControlName="age" />
+              @if (studentForm.controls.name.touched && studentForm.controls.name.errors?.['required']) {
+                <small class="text-danger">Student name is required.</small>
+              }
+              @if (studentForm.controls.name.touched && studentForm.controls.name.errors?.['maxlength']) {
+                <small class="text-danger">Name cannot exceed 120 characters.</small>
+              }
             </div>
 
-            <div class="col-6 mb-3">
-              <label class="form-label">CGPA</label>
-              <input type="number" class="form-control" step="0.01" formControlName="cgpa" />
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control"
+                [value]="editingStudentEmail" readonly />
+              <small class="text-muted">Email address cannot be changed.</small>
             </div>
-          </div>
 
-          <div class="student-modal-footer">
-            <button type="button" class="btn btn-light" (click)="closeEditModal()">Cancel</button>
+            <div class="mb-3">
+              <label class="form-label">Department</label>
+              <input type="text" class="form-control" formControlName="department"
+                [class.is-invalid]="studentForm.controls.department.touched && studentForm.controls.department.invalid" />
 
-            <button type="submit" class="btn-close-modal" [disabled]="studentForm.invalid">
-              Update Student
-            </button>
-          </div>
-        </form>
+              @if (studentForm.controls.department.touched && studentForm.controls.department.errors?.['required']) {
+                <small class="text-danger">Department is required.</small>
+              }
+              @if (studentForm.controls.department.touched && studentForm.controls.department.errors?.['maxlength']) {
+                <small class="text-danger">Department cannot exceed 100 characters.</small>
+              }
+            </div>
+
+            <div class="row">
+              <div class="col-6 mb-3">
+                <label class="form-label">Age</label>
+                <input type="number" class="form-control" formControlName="age"
+                  min="17" max="60"
+                  [class.is-invalid]="studentForm.controls.age.touched && studentForm.controls.age.invalid" />
+
+                @if (studentForm.controls.age.touched && studentForm.controls.age.errors) {
+                  <small class="text-danger">Age must be between 17 and 60.</small>
+                }
+              </div>
+
+              <div class="col-6 mb-3">
+                <label class="form-label">CGPA</label>
+                <input type="number" class="form-control" step="0.01"
+                  min="0" max="10" formControlName="cgpa"
+                  [class.is-invalid]="studentForm.controls.cgpa.touched && studentForm.controls.cgpa.invalid" />
+
+                @if (studentForm.controls.cgpa.touched && studentForm.controls.cgpa.errors) {
+                  <small class="text-danger">CGPA must be between 0 and 10.</small>
+                }
+              </div>
+            </div>
+
+            <div class="student-modal-footer">
+              <button type="button" class="btn btn-light"
+                (click)="closeEditModal()" [disabled]="isUpdatingStudent">
+                Cancel
+              </button>
+
+              <button type="submit" class="btn-close-modal"
+                [disabled]="studentForm.invalid || isUpdatingStudent">
+                @if (isUpdatingStudent) {
+                  Updating...
+                } @else {
+                  Update Student
+                }
+              </button>
+            </div>
+          </form>
+        }
       </div>
     </div>
   </div>

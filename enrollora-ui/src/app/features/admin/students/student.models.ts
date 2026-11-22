@@ -22,7 +22,6 @@ export interface StudentFilter {
 
 export interface UpdateStudentRequest {
   name: string;
-  email: string;
   department: string;
   age: number;
   cgpa: number;
