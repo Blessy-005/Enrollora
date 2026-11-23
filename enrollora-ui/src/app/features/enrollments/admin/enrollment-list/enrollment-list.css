@@ -69,6 +69,106 @@
   margin: 3px 0 0;
 }
 
+/* Filter panel */
+.filter-container {
+  background: white;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(40, 20, 70, 0.06);
+  margin-bottom: 24px;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.filter-header h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: #332849;
+  margin: 0 0 5px;
+}
+
+.filter-header h3 i {
+  color: #7544d8;
+  margin-right: 6px;
+}
+
+.filter-header p {
+  color: #91899d;
+  font-size: 13px;
+  margin: 0;
+}
+
+.filter-header button {
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.filter-field label {
+  color: #5e536f;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.filter-field .form-control,
+.filter-field .form-select {
+  min-height: 42px;
+  border: 1px solid #e8e2f0;
+  border-radius: 9px;
+  color: #443853;
+  font-size: 13px;
+  background-color: #fff;
+}
+
+.filter-field .form-control:focus,
+.filter-field .form-select:focus {
+  border-color: #9a78e6;
+  box-shadow: 0 0 0 3px rgba(117, 68, 216, 0.1);
+}
+
+.filter-field .form-control::placeholder {
+  color: #aaa2b5;
+}
+
+.filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.filter-actions .btn-primary {
+  background: #7544d8;
+  border-color: #7544d8;
+  border-radius: 9px;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.filter-actions .btn-primary:hover {
+  background: #6033bd;
+  border-color: #6033bd;
+}
+
+/* Enrollment table */
 .table-container {
   background: white;
   border-radius: 16px;
@@ -179,9 +279,36 @@
   padding: 8px 14px;
 }
 
+@media (max-width: 1000px) {
+  .filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 650px) {
   .enrollment-page {
     padding: 14px;
+  }
+
+  .page-header h2 {
+    font-size: 22px;
+  }
+
+  .filter-container {
+    padding: 16px;
+  }
+
+  .filter-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-actions .btn-primary {
+    width: 100%;
   }
 
   .pagination-container {

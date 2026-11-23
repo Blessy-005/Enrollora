@@ -80,20 +80,32 @@ export class EnrollmentService {
       .set('pageNumber', pageNumber)
       .set('pageSize', pageSize);
 
-    if (filters?.search) {
-      params = params.set('search', filters.search);
+    if (filters?.search?.trim()) {
+      params = params.set('search', filters.search.trim());
     }
+
     if (filters?.courseId != null) {
       params = params.set('courseId', filters.courseId);
     }
+
     if (filters?.status != null) {
       params = params.set('status', filters.status);
     }
+
     if (filters?.fromDate) {
       params = params.set('fromDate', filters.fromDate);
     }
+
     if (filters?.toDate) {
       params = params.set('toDate', filters.toDate);
+    }
+
+    if (filters?.sortBy) {
+      params = params.set('sortBy', filters.sortBy);
+    }
+
+    if (filters?.sortOrder) {
+      params = params.set('sortOrder', filters.sortOrder);
     }
 
     return params;

@@ -1,5 +1,5 @@
 <div class="enrollment-page">
-  <!-- Page Header -->
+
   <div class="page-header">
     <div>
       <h2>Enrollment Management</h2>
@@ -11,7 +11,6 @@
     </div>
   </div>
 
-  <!-- Summary -->
   <div class="summary-card">
     <div class="summary-icon">
       <i class="bi bi-people-fill"></i>
@@ -19,6 +18,144 @@
     <div>
       <span>Total Enrollments</span>
       <h3>{{ totalRecords() }}</h3>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-container">
+
+    <div class="filter-header">
+      <div>
+        <h3><i class="bi bi-funnel"></i> Filter Enrollments</h3>
+        <p>Find and organize enrollment records.</p>
+      </div>
+
+      <button class="btn btn-outline-secondary btn-sm" (click)="resetFilters()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        Reset Filters
+      </button>
+    </div>
+
+    <div class="filter-grid">
+
+      <div class="filter-field search-field">
+        <label for="enrollmentSearch">Search Student</label>
+        <input
+          id="enrollmentSearch"
+          type="text"
+          class="form-control"
+          placeholder="Enter student name or email"
+          [value]="search()"
+          (input)="setSearch($any($event.target).value)"
+          (keyup.enter)="applyFilters()"
+        />
+      </div>
+
+      <div class="filter-field">
+        <label for="courseFilter">Course</label>
+        <select
+          id="courseFilter"
+          class="form-select"
+          (change)="setCourseId($any($event.target).value); applyFilters()"
+        >
+          <option value="">All Courses</option>
+          @for (course of courses(); track course.courseId) {
+            <option
+              [value]="course.courseId"
+              [selected]="courseId() === course.courseId"
+            >
+              {{ course.courseName }}
+            </option>
+          }
+        </select>
+        @if (courseLoadError()) {
+          <small class="text-danger">{{ courseLoadError() }}</small>
+        }
+      </div>
+
+      <div class="filter-field">
+        <label for="statusFilter">Enrollment Status</label>
+        <select
+          id="statusFilter"
+          class="form-select"
+          (change)="setStatus($any($event.target).value); applyFilters()"
+        >
+          <option value="">All Statuses</option>
+          <option value="0" [selected]="status() === 0">Active</option>
+          <option value="1" [selected]="status() === 1">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label for="fromDate">From Date</label>
+        <input
+          id="fromDate"
+          type="date"
+          class="form-control"
+          [value]="fromDate()"
+          (change)="setFromDate($any($event.target).value)"
+        />
+      </div>
+
+      <div class="filter-field">
+        <label for="toDate">To Date</label>
+        <input
+          id="toDate"
+          type="date"
+          class="form-control"
+          [value]="toDate()"
+          (change)="setToDate($any($event.target).value)"
+        />
+      </div>
+
+      <div class="filter-field">
+        <label for="sortBy">Sort By</label>
+        <select
+          id="sortBy"
+          class="form-select"
+          [value]="sortBy()"
+          (change)="setSortBy($any($event.target).value)"
+        >
+          <option value="enrolledAt">Enrollment Date</option>
+          <option value="student">Student Name</option>
+          <option value="course">Course Name</option>
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label for="sortOrder">Sort Order</label>
+        <select
+          id="sortOrder"
+          class="form-select"
+          [value]="sortOrder()"
+          (change)="setSortOrder($any($event.target).value)"
+        >
+          <option value="desc">Newest First / Z-A</option>
+          <option value="asc">Oldest First / A-Z</option>
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label for="pageSize">Records Per Page</label>
+        <select
+          id="pageSize"
+          class="form-select"
+          [value]="pageSize()"
+          (change)="setPageSize($any($event.target).value)"
+        >
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="filter-actions">
+      <button class="btn btn-primary" (click)="applyFilters()">
+        <i class="bi bi-search"></i>
+        Apply Filters
+      </button>
     </div>
   </div>
 
@@ -34,7 +171,12 @@
   @if (errorMessage()) {
     <div class="alert alert-danger">
       {{ errorMessage() }}
-      <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadEnrollments()">Retry</button>
+      <button
+        class="btn btn-sm btn-outline-danger ms-2"
+        (click)="loadEnrollments()"
+      >
+        Retry
+      </button>
     </div>
   }
 
@@ -75,7 +217,9 @@
                 <span class="course-name">
                   {{ enrollment.courseName }}
                 </span>
-                <small class="course-id"> Course #{{ enrollment.courseId }} </small>
+                <small class="course-id">
+                  Course #{{ enrollment.courseId }}
+                </small>
               </td>
 
               <td>
@@ -85,14 +229,13 @@
               <td>
                 <span
                   class="status-badge"
-                  [class.active]="enrollment.status === 1"
-                  [class.inactive]="enrollment.status !== 1"
+                  [class.active]="enrollment.status === 0"
+                  [class.inactive]="enrollment.status === 1"
                 >
-                  {{ enrollment.status === 1 ? 'Active' : 'Cancelled' }}
+                  {{ enrollment.status === 0 ? 'Active' : 'Cancelled' }}
                 </span>
               </td>
             </tr>
-
           } @empty {
             <tr>
               <td colspan="4" class="empty-state">
@@ -107,7 +250,9 @@
 
     <!-- Pagination -->
     <div class="pagination-container">
-      <span> Showing {{ enrollments().length }} of {{ totalRecords() }} enrollments </span>
+      <span>
+        Showing {{ enrollments().length }} of {{ totalRecords() }} enrollments
+      </span>
 
       <div class="pagination-actions">
         <button
@@ -118,7 +263,7 @@
           Previous
         </button>
 
-        <span> Page {{ pageNumber() }} of {{ totalPages() }} </span>
+        <span>Page {{ pageNumber() }} of {{ totalPages() }}</span>
 
         <button
           class="btn btn-outline-secondary"
@@ -130,4 +275,5 @@
       </div>
     </div>
   }
+
 </div>
