@@ -1,4 +1,4 @@
-.enrollment-page {
+﻿.enrollment-page {
   padding: 28px;
   min-height: calc(100vh - 84px);
   color: #29243b;
@@ -99,7 +99,7 @@
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 850px;
 }
 
 thead {
@@ -150,12 +150,14 @@ td {
   margin-top: 4px;
 }
 
-.status-badge {
+.status-badge,
+.request-badge {
   display: inline-block;
   padding: 6px 11px;
   border-radius: 20px;
   font-size: 11px;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .status-badge.active {
@@ -166,6 +168,91 @@ td {
 .status-badge.cancelled {
   background: #fff0e9;
   color: #dc6541;
+}
+
+.request-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.request-badge.pending {
+  background: #fff6df;
+  color: #a66b00;
+}
+
+.request-badge.approved {
+  background: #e9f8ef;
+  color: #16834a;
+}
+
+.request-badge.rejected {
+  background: #fff0f0;
+  color: #c24141;
+}
+
+.request-info {
+  color: #a09aac;
+  font-size: 12px;
+}
+
+.request-btn {
+  border: 1px solid #8b5cf6;
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: #f6f1ff;
+  color: #8050d8;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.request-btn:hover {
+  background: #8b5cf6;
+  color: #fff;
+}
+
+.success-alert {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  margin-bottom: 18px;
+  border: 1px solid #c8ecd6;
+  border-radius: 10px;
+  background: #effaf3;
+  color: #16834a;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.success-alert button {
+  border: none;
+  background: transparent;
+  color: #16834a;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.inline-error {
+  margin: 15px 20px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff0f0;
+  color: #c24141;
+  font-size: 12px;
+}
+
+.inline-error button {
+  margin-left: 10px;
+  border: none;
+  background: transparent;
+  color: #8b5cf6;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .pagination {
@@ -193,6 +280,7 @@ td {
   border-radius: 8px;
   font-size: 12px;
   font-weight: 700;
+  cursor: pointer;
 }
 
 .pagination button:disabled {
@@ -209,6 +297,179 @@ td {
   font-weight: 800;
 }
 
+/* Cancellation modal */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgba(25, 18, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.cancellation-modal {
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 26px;
+  border: 1px solid #efedf4;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(25, 18, 42, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.modal-header h2 {
+  margin: 7px 0 0;
+  color: #29213f;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.close-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 9px;
+  background: #f4f1f8;
+  color: #625b70;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.close-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-course {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  background: #f8f5ff;
+}
+
+.modal-course strong {
+  color: #44315f;
+  font-size: 14px;
+}
+
+.modal-course small {
+  color: #898397;
+  font-size: 11px;
+}
+
+.cancellation-modal label {
+  display: block;
+  margin-bottom: 9px;
+  color: #443b55;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.cancellation-modal textarea {
+  display: block;
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  padding: 12px;
+  border: 1px solid #e5dfef;
+  border-radius: 10px;
+  outline: none;
+  color: #443b55;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+
+.cancellation-modal textarea:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.cancellation-modal textarea:disabled {
+  background: #f8f7fa;
+}
+
+.character-count {
+  margin-top: 6px;
+  color: #a09aac;
+  font-size: 11px;
+  text-align: right;
+}
+
+.form-error {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fff0f0;
+  color: #c24141;
+  font-size: 12px;
+}
+
+.modal-note {
+  margin-top: 18px;
+  padding: 12px;
+  border-radius: 9px;
+  background: #f8f5ff;
+  color: #716582;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.cancel-btn,
+.submit-btn {
+  border: none;
+  border-radius: 9px;
+  padding: 11px 17px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #f1eef5;
+  color: #625b70;
+}
+
+.submit-btn {
+  background: #8b5cf6;
+  color: #fff;
+}
+
+.submit-btn:hover {
+  background: #7544dc;
+}
+
+.cancel-btn:disabled,
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (max-width: 700px) {
   .enrollment-page {
     padding: 16px;
@@ -217,5 +478,18 @@ td {
   .pagination {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .cancellation-modal {
+    padding: 20px;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
   }
 }
